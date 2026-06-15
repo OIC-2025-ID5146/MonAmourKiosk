@@ -1,0 +1,96 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2000/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2000/xaml">
+
+    <!-- Palette de Couleurs Officielle -->
+    <Color x:Key="CreamWhiteColor">#F8F5F0</Color>
+    <Color x:Key="WarmBeigeColor">#E8DCCB</Color>
+    <Color x:Key="CoffeeBrownColor">#6F4E37</Color>
+    <Color x:Key="DarkEspressoColor">#3A2C27</Color>
+    <Color x:Key="GoldAccentColor">#C8A96B</Color>
+
+    <SolidColorBrush x:Key="CreamWhiteBrush" Color="{StaticResource CreamWhiteColor}"/>
+    <SolidColorBrush x:Key="WarmBeigeBrush" Color="{StaticResource WarmBeigeColor}"/>
+    <SolidColorBrush x:Key="CoffeeBrownBrush" Color="{StaticResource CoffeeBrownColor}"/>
+    <SolidColorBrush x:Key="DarkEspressoBrush" Color="{StaticResource DarkEspressoColor}"/>
+    <SolidColorBrush x:Key="GoldAccentBrush" Color="{StaticResource GoldAccentColor}"/>
+
+    <!-- Typographies Haut de Gamme -->
+    <Style x:Key="TitleFont" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Playfair Display, Georgia, Serif"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="{StaticResource DarkEspressoBrush}"/>
+    </Style>
+
+    <Style x:Key="BodyFont" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Inter, Segoe UI, sans-serif"/>
+        <Setter Property="Foreground" Value="{StaticResource DarkEspressoBrush}"/>
+    </Style>
+
+    <!-- Effet Visuel Glassmorphism (Effet de Verre Flouté Parisien) -->
+    <Style x:Key="GlassPanel" TargetType="Border">
+        <Setter Property="Background" Value="#F2F8F5F0"/>
+        <Setter Property="BorderBrush" Value="#3CC8A96B"/>
+        <Setter Property="BorderThickness" Value="1.5"/>
+        <Setter Property="CornerRadius" Value="24"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect BlurRadius="35" Color="#25000000" ShadowDepth="6" Direction="270"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Bouton Premium Interactif avec Animations Intégrées -->
+    <Style x:Key="PremiumButton" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource DarkEspressoBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource CreamWhiteBrush}"/>
+        <Setter Property="FontFamily" Value="Inter, Segoe UI"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Padding" Value="30,15"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Border" 
+                            Background="{TemplateBinding Background}" 
+                            CornerRadius="30" 
+                            Padding="{TemplateBinding Padding}"
+                            SnapsToDevicePixels="True"
+                            RenderTransformOrigin="0.5,0.5">
+                        <Border.RenderTransform>
+                            <ScaleTransform x:Name="ButtonScale" ScaleX="1.0" ScaleY="1.0"/>
+                        </Border.RenderTransform>
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource CoffeeBrownBrush}"/>
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Border" Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleX)" To="1.04" Duration="0:0:0.15"/>
+                                        <DoubleAnimation Storyboard.TargetName="Border" Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleY)" To="1.04" Duration="0:0:0.15"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Border" Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.15"/>
+                                        <DoubleAnimation Storyboard.TargetName="Border" Storyboard.TargetProperty="(Border.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.15"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource GoldAccentBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Border" Property="Background" Value="#A0A0A0"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

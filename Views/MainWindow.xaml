@@ -1,12 +1,25 @@
-﻿<Window x:Class="MonAmourKiosk.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MonAmourKiosk"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+﻿<Window x:Class="MonAmourKiosk.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2000/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2000/xaml"
+        xmlns:viewmodels="clr-with:MonAmourKiosk.ViewModels"
+        xmlns:views="clr-with:MonAmourKiosk.Views"
+        Title="Mon Amour Café &amp; Bistro - Kiosque de Vente"
+        WindowState="Maximized" WindowStyle="None"
+        Width="1080" Height="1920" Background="#F8F5F0">
 
-    </Grid>
+	<Window.Resources>
+		<DataTemplate DataType="{x:Type viewmodels:AccueilViewModel}">
+			<views:AccueilView/>
+		</DataTemplate>
+		<DataTemplate DataType="{x:Type viewmodels:MenuViewModel}">
+			<views:MenuView/>
+		</DataTemplate>
+		<DataTemplate DataType="{x:Type viewmodels:CheckoutViewModel}">
+			<views:CheckoutView/>
+		</DataTemplate>
+	</Window.Resources>
+
+	<Grid>
+		<ContentControl Content="{Binding Navigation.CurrentView}"/>
+	</Grid>
 </Window>

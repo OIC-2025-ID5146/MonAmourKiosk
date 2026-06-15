@@ -1,0 +1,79 @@
+﻿<UserControl x:Class="MonAmourKiosk.Views.CheckoutView"
+             xmlns="http://schemas.microsoft.com/winfx/2000/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2000/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignHeight="1920" d:DesignWidth="1080">
+    <Grid Background="#F8F5F0" Padding="50">
+
+        <!-- Étape 1: Écran de Sélection des Modes de Paiement -->
+        <Grid Visibility="{Binding IsSuccessScreenVisible, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Inverse}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="Choisissez votre mode de paiement" Style="{StaticResource TitleFont}" FontSize="44" HorizontalAlignment="Center" Margin="0,120,0,0"/>
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Button Style="{StaticResource PremiumButton}" Width="300" Height="300" Margin="25" Command="{Binding SelectPaymentMethodCommand}" CommandParameter="Carte">
+                    <StackPanel>
+                        <TextBlock Text="💳" FontSize="80" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Carte Bancaire" Style="{StaticResource TitleFont}" FontSize="24" Foreground="White" Margin="0,25,0,0" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource PremiumButton}" Width="300" Height="300" Margin="25" Command="{Binding SelectPaymentMethodCommand}" CommandParameter="QR">
+                    <StackPanel>
+                        <TextBlock Text="📱" FontSize="80" HorizontalAlignment="Center"/>
+                        <TextBlock Text="QR Code" Style="{StaticResource TitleFont}" FontSize="24" Foreground="White" Margin="0,25,0,0" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource PremiumButton}" Width="300" Height="300" Margin="25" Command="{Binding SelectPaymentMethodCommand}" CommandParameter="Espèces">
+                    <StackPanel>
+                        <TextBlock Text="💶" FontSize="80" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Espèces" Style="{StaticResource TitleFont}" FontSize="24" Foreground="White" Margin="0,25,0,0" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <!-- Étape 2: Tunnel de Traitement de Facturation Espèces (Popup Overlay Dynamique) -->
+        <Grid Background="#A5000000" Visibility="{Binding IsCashMethodSelected, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="-50">
+            <Border Style="{StaticResource GlassPanel}" Width="680" Height="780" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="45">
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="Finalisez au Comptoir" Style="{StaticResource TitleFont}" FontSize="34" HorizontalAlignment="Center" Margin="0,0,0,12"/>
+                    <TextBlock Text="Veuillez présenter ce QR code au comptoir afin de finaliser votre paiement auprès du serveur." Style="{StaticResource BodyFont}" FontSize="16" TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,35" Foreground="#6F4E37"/>
+                    <Border BorderThickness="2" BorderBrush="{StaticResource DarkEspressoBrush}" CornerRadius="12" Background="White" Width="320" Height="320" HorizontalAlignment="Center" Padding="12">
+                        <Image Source="{Binding CashPaymentQrCode}" Stretch="Uniform"/>
+                    </Border>
+                    <TextBlock Text="{Binding OrderNumber, StringFormat='Commande No: {0}'}" Style="{StaticResource TitleFont}" FontSize="26" HorizontalAlignment="Center" Margin="0,25,0,35"/>
+                    <Button Content="J'ai Payé au Comptoir" Style="{StaticResource PremiumButton}" Width="280" Height="60" Command="{Binding ExecuteSuccessFlowCommand}"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Étape 3: Écran de Succès Final de Enregistrement -->
+        <Grid Visibility="{Binding IsSuccessScreenVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="✨" FontSize="100" HorizontalAlignment="Center"/>
+                <TextBlock Text="Merci !" Style="{StaticResource TitleFont}" FontSize="68" HorizontalAlignment="Center" Margin="0,12,0,6"/>
+                <TextBlock Text="Votre commande a été enregistrée avec succès." Style="{StaticResource BodyFont}" FontSize="24" HorizontalAlignment="Center" Foreground="#6F4E37"/>
+
+                <Border Background="White" CornerRadius="24" Padding="45" Margin="0,55" Width="480">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="25" Color="#12000000"/>
+                    </Border.Effect>
+                    <StackPanel>
+                        <TextBlock Text="Numéro de commande" Style="{StaticResource BodyFont}" FontSize="16" HorizontalAlignment="Center" Foreground="#707070"/>
+                        <TextBlock Text="{Binding OrderNumber}" Style="{StaticResource TitleFont}" FontSize="58" HorizontalAlignment="Center" Margin="0,12" Foreground="#C8A96B"/>
+                        <Separator Background="#E8DCCB" Margin="0,18"/>
+                        <TextBlock Text="Temps d'attente estimé" Style="{StaticResource BodyFont}" FontSize="14" HorizontalAlignment="Center" Foreground="#707070"/>
+                        <TextBlock Text="8 minutes" Style="{StaticResource TitleFont}" FontSize="26" HorizontalAlignment="Center" Margin="0,6,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <Button Content="Nouvelle commande" Style="{StaticResource PremiumButton}" Width="320" Height="65" Command="{Binding ResetKioskCommand}"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

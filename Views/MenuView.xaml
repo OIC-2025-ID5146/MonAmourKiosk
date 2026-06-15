@@ -1,0 +1,208 @@
+﻿<UserControl x:Class="MonAmourKiosk.Views.MenuView"
+             xmlns="http://schemas.microsoft.com/winfx/2000/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2000/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" d:DesignHeight="1920" d:DesignWidth="1080">
+    <Grid Background="#F8F5F0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="440"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Catalogue Principal de Produits -->
+        <Grid Grid.Column="0" Margin="35">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Titre d'En-tête de la Marque -->
+            <StackPanel Grid.Row="0" Margin="0,15,0,35">
+                <TextBlock Text="Mon Amour Café &amp; Bistro" Style="{StaticResource TitleFont}" FontSize="44"/>
+                <TextBlock Text="Sélectionnez vos gourmandises artisanales" Style="{StaticResource BodyFont}" FontSize="18" Foreground="#6F4E37"/>
+            </StackPanel>
+
+            <!-- Sélection Interactive des Catégories de Produits -->
+            <ListBox Grid.Row="1" Background="Transparent" BorderThickness="0" 
+                     SelectedValue="{Binding SelectedCategory, Mode=TwoWay}">
+                <ListBox.Resources>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Template">
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <ContentPresenter />
+                            </ControlTemplate>
+                        </Setter>
+                    </Style>
+                </ListBox.Resources>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.Items>
+                    <sys:String>☕ Café</sys:String>
+                    <sys:String>🥐 Boulangerie</sys:String>
+                    <sys:String>🍽 Bistro</sys:String>
+                    <sys:String>🧁 Desserts</sys:String>
+                </ListBox.Items>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="{Binding}" Style="{StaticResource PremiumButton}" Margin="0,0,15,0" Padding="25,12" FontSize="16"
+                                Background="{StaticResource WarmBeigeBrush}" Foreground="{StaticResource DarkEspressoBrush}"
+                                Command="{Binding DataContext.FilterCategoryCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <!-- Grille de Défilement Fluide des Produits -->
+            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Hidden" Margin="0,30,0,0">
+                <ItemsControl ItemsSource="{Binding FilteredProducts}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="3" VerticalAlignment="Top"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="White" CornerRadius="20" Margin="15" Padding="15">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="18" Color="#12000000" ShadowDepth="4"/>
+                                </Border.Effect>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="180"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Border Grid.Row="0" CornerRadius="15" ClipToBounds="True">
+                                        <Image Source="{Binding ImagePath}" Stretch="UniformToFill"/>
+                                    </Border>
+                                    <TextBlock Grid.Row="1" Text="{Binding Name}" Style="{StaticResource TitleFont}" FontSize="20" Margin="0,12,0,4"/>
+                                    <TextBlock Grid.Row="2" Text="{Binding Description}" Style="{StaticResource BodyFont}" FontSize="13" Foreground="#707070" TextWrapping="Wrap"/>
+                                    <DockPanel Grid.Row="3" Margin="0,15,0,0">
+                                        <TextBlock Text="{Binding Price, StringFormat='{}{0:F2} €'}" Style="{StaticResource TitleFont}" FontSize="18" VerticalAlignment="Center"/>
+                                        <Button Content="Ajouter" HorizontalAlignment="Right" Style="{StaticResource PremiumButton}" Padding="18,8" FontSize="14"
+                                                Command="{Binding DataContext.HandleProductSelectionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
+                                    </DockPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+
+        <!-- Tiroir Latéral du Panier Persistant -->
+        <Border Grid.Column="1" Background="#E8DCCB" CornerRadius="32,0,0,32" Padding="25">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Votre Panier" Style="{StaticResource TitleFont}" FontSize="28" Margin="0,10,0,25"/>
+
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
+                    <ItemsControl ItemsSource="{Binding CartService.Items}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="White" CornerRadius="14" Margin="0,0,0,12" Padding="14">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Text="{Binding Product.Name}" Style="{StaticResource TitleFont}" FontSize="16"/>
+                                            <TextBlock Text="{Binding Price, StringFormat='{}{0:F2} €'}" Style="{StaticResource BodyFont}" FontSize="14" Foreground="#6F4E37"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Button Content="-" Width="30" Height="30" Style="{StaticResource PremiumButton}" Padding="0"
+                                                    Command="{Binding DataContext.CartService.RemoveProduct, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding Product}"/>
+                                            <TextBlock Text="{Binding Quantity}" Style="{StaticResource TitleFont}" FontSize="16" Margin="12,0" VerticalAlignment="Center"/>
+                                            <Button Content="+" Width="30" Height="30" Style="{StaticResource PremiumButton}" Padding="0"
+                                                    Command="{Binding DataContext.CartService.AddProduct, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding Product}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+
+                <StackPanel Grid.Row="2" Margin="0,20,0,10">
+                    <Separator Background="#3A2C27" Margin="0,0,0,15"/>
+                    <DockPanel Margin="0,5">
+                        <TextBlock Text="Sous-total" Style="{StaticResource BodyFont}" FontSize="16"/>
+                        <TextBlock Text="{Binding CartService.SubTotal, StringFormat='{}{0:F2} €'}" HorizontalAlignment="Right" Style="{StaticResource BodyFont}" FontSize="16"/>
+                    </DockPanel>
+                    <DockPanel Margin="0,5">
+                        <TextBlock Text="TVA (10%)" Style="{StaticResource BodyFont}" FontSize="16"/>
+                        <TextBlock Text="{Binding CartService.Tax, StringFormat='{}{0:F2} €'}" HorizontalAlignment="Right" Style="{StaticResource BodyFont}" FontSize="16"/>
+                    </DockPanel>
+                    <DockPanel Margin="0,12,0,25">
+                        <TextBlock Text="Total" Style="{StaticResource TitleFont}" FontSize="26"/>
+                        <TextBlock Text="{Binding CartService.Total, StringFormat='{}{0:F2} €'}" HorizontalAlignment="Right" Style="{StaticResource TitleFont}" FontSize="26" Foreground="#C8A96B"/>
+                    </DockPanel>
+                    <Button Content="Passer à la caisse" Style="{StaticResource PremiumButton}" Height="65" Command="{Binding CompleteCheckoutCommand}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Fenêtre Contextuelle d'Upselling Algorithmique Cross-Selling (Popup Recommandations) -->
+        <Grid Grid.ColumnSpan="2" Background="#A5000000" Visibility="{Binding IsRecommendationPopupOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Border Style="{StaticResource GlassPanel}" Width="750" Height="520" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="35">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,5,0,25">
+                        <TextBlock Text="Parfait avec votre café ☕" Style="{StaticResource TitleFont}" FontSize="34" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Laissez-vous tenter par une douceur artisanale de la maison" Style="{StaticResource BodyFont}" FontSize="16" Foreground="#6F4E37" HorizontalAlignment="Center" Margin="0,6,0,0"/>
+                    </StackPanel>
+
+                    <ItemsControl Grid.Row="1" ItemsSource="{Binding CurrentRecommendations}" HorizontalAlignment="Center">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Background="Transparent" BorderThickness="0" Margin="15,0" Command="{Binding DataContext.AddRecommendedAndCloseCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}">
+                                    <Border Background="White" CornerRadius="18" Width="190" Padding="14">
+                                        <Border.Effect>
+                                            <DropShadowEffect BlurRadius="12" Color="#18000000"/>
+                                        </Border.Effect>
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="115"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <Border Grid.Row="0" CornerRadius="12" ClipToBounds="True">
+                                                <Image Source="{Binding ImagePath}" Stretch="UniformToFill"/>
+                                            </Border>
+                                            <TextBlock Grid.Row="1" Text="{Binding Name}" Style="{StaticResource TitleFont}" FontSize="16" HorizontalAlignment="Center" Margin="0,10,0,3"/>
+                                            <TextBlock Grid.Row="2" Text="{Binding Price, StringFormat='{}{0:F2} €'}" Style="{StaticResource BodyFont}" FontSize="14" Foreground="#C8A96B" HorizontalAlignment="Center"/>
+                                        </Grid>
+                                    </Border>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <Button Grid.Row="2" Content="Non merci, continuer la commande" Style="{StaticResource PremiumButton}" Background="Transparent" Foreground="#3A2C27" HorizontalAlignment="Center" Command="{Binding ClosePopupOnlyCommand}"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

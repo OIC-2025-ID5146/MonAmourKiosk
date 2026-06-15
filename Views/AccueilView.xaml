@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="MonAmourKiosk.Views.AccueilView"
+             xmlns="http://schemas.microsoft.com/winfx/2000/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2000/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" d:DesignHeight="1920" d:DesignWidth="1080">
+
+    <Grid>
+        <!-- Arrière-Plan Luxueux -->
+        <Image Source="pack://siteoforigin:,,,/Assets/Backgrounds/paris_cafe_bg.jpg" Stretch="UniformToFill">
+            <Image.Effect>
+                <BlurEffect Radius="20"/>
+            </Image.Effect>
+        </Image>
+        <Rectangle Fill="#30000000"/>
+
+        <!-- Panneau de Bienvenue en Verre Dépoli (Glassmorphism) -->
+        <Border Style="{StaticResource GlassPanel}" Width="700" Height="750" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Margin="0,70,0,0" HorizontalAlignment="Center">
+                    <TextBlock Text="Bienvenue" Style="{StaticResource TitleFont}" FontSize="56" HorizontalAlignment="Center" Foreground="#3A2C27"/>
+                    <TextBlock Text="chez" Style="{StaticResource TitleFont}" FontSize="28" FontStyle="Italic" HorizontalAlignment="Center" Foreground="#C8A96B" Margin="0,12"/>
+                    <TextBlock Text="Mon Amour" Style="{StaticResource TitleFont}" FontSize="68" HorizontalAlignment="Center" Foreground="#3A2C27"/>
+                    <TextBlock Text="Café &amp; Bistro" Style="{StaticResource TitleFont}" FontSize="40" HorizontalAlignment="Center" Foreground="#3A2C27" Margin="0,-5,0,0"/>
+                </StackPanel>
+
+                <TextBlock Grid.Row="1" Text="L'Art du Café Français" Style="{StaticResource TitleFont}" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#6F4E37" LetterSpacing="3"/>
+
+                <Button Grid.Row="2" Content="Commencer la commande" Style="{StaticResource PremiumButton}" Width="420" Height="75" Margin="0,0,0,90" Command="{Binding CommencerCommand}"/>
+            </Grid>
+
+            <Border.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" Duration="0:0:1.5"/>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)" From="120" To="0" Duration="0:0:1.2">
+                                <DoubleAnimation.EasingFunction>
+                                    <CubicEase EasingMode="EaseOut"/>
+                                </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Border.Triggers>
+            <Border.RenderTransform>
+                <TranslateTransform/>
+            </Border.RenderTransform>
+        </Border>
+    </Grid>
+</UserControl>
